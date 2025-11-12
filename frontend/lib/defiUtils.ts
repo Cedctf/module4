@@ -1,7 +1,7 @@
 import { SuiClient, SuiObjectResponse } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
-import { DeFiPoolData, DeFiTransactionParams } from '../types';
-import { DEFI_PACKAGE_ID, DEFI_POOL_ID } from '../config';
+import { DeFiPoolData, DeFiTransactionParams } from './types';
+import { DEFI_PACKAGE_ID, DEFI_POOL_ID } from './config';
 
 // Constants for conversion
 export const SUI_TO_MIST = 1_000_000_000;

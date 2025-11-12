@@ -18,7 +18,7 @@ import {
   getExplorerUrl,
   handleTransactionSuccess,
   handleTransactionError
-} from '@/lib/utils/defiUtils';
+} from '@/lib/defiUtils';
 import { DEFI_PACKAGE_ID, DEFI_POOL_ID } from '@/lib/config';
 
 export default function DeFiPage() {
