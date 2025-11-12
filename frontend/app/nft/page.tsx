@@ -10,10 +10,10 @@ import Link from 'next/link';
 import MintNFTForm from '@/components/nft/MintNFTForm';
 import UserNFTList from '@/components/nft/UserNFTList';
 import NFTMintedEvents from '@/components/nft/NFTMintedEvents';
-import { ParsedNFTEvent } from '@/lib/types/nft';
+import { ParsedNFTEvent } from '@/lib/types';
 import { SuiObjectResponse } from '@mysten/sui/client';
-import { parseNFTMintedEvents, queryAllNFTMintedEvents, fetchUserNFTs } from '@/lib/utils/nft';
-import { PACKAGE_ID } from '@/lib/config/nft';
+import { parseNFTMintedEvents, queryAllNFTMintedEvents, fetchUserNFTs } from '@/lib/nftUtils';
+import { PACKAGE_ID } from '@/lib/config';
 
 export default function NFTPage() {
   const currentAccount = useCurrentAccount();

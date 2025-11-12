@@ -1,7 +1,7 @@
 'use client';
 
-import { NFTMintedEventsProps } from '@/lib/types/nft';
-import { formatTimestamp, getExplorerUrl } from '@/lib/utils/nft';
+import { NFTMintedEventsProps } from '@/lib/types';
+import { formatTimestamp, getExplorerUrl } from '@/lib/nftUtils';
 
 export default function NFTMintedEvents({ events, loading, onRefresh }: NFTMintedEventsProps) {
   return (

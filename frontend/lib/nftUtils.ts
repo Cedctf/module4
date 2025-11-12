@@ -1,6 +1,6 @@
 import { SuiClient } from '@mysten/sui/client';
-import { ParsedNFTEvent } from '../types/nft';
-import { PACKAGE_ID } from '../config/nft';
+import { ParsedNFTEvent } from './types';
+import { PACKAGE_ID } from './config';
 
 // Helper function to manually encode string to BCS format (bypass SDK bug)
 export const encodeToBCS = (text: string): Uint8Array => {

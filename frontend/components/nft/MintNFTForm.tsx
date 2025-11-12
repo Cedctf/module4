@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
 import { Transaction } from '@mysten/sui/transactions';
-import { MintNFTFormProps, NFTFormData } from '@/lib/types/nft';
-import { encodeToBCS, validateNFTFormData } from '@/lib/utils/nft';
+import { MintNFTFormProps, NFTFormData } from '@/lib/types';
+import { encodeToBCS, validateNFTFormData } from '@/lib/nftUtils';
 
 export default function MintNFTForm({ packageId, onMintSuccess, onFetchNFTs }: MintNFTFormProps) {
   const currentAccount = useCurrentAccount();

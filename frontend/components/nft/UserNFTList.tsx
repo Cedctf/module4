@@ -1,8 +1,8 @@
 'use client';
 
 import { useCurrentAccount } from '@mysten/dapp-kit';
-import { UserNFTListProps } from '@/lib/types/nft';
-import { extractNFTFields } from '@/lib/utils/nft';
+import { UserNFTListProps } from '@/lib/types';
+import { extractNFTFields } from '@/lib/nftUtils';
 
 export default function UserNFTList({ nfts, loading, onRefresh }: UserNFTListProps) {
   const currentAccount = useCurrentAccount();
