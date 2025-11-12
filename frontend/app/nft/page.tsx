@@ -13,7 +13,7 @@ import NFTMintedEvents from '@/components/nft/NFTMintedEvents';
 import { ParsedNFTEvent } from '@/lib/types';
 import { SuiObjectResponse } from '@mysten/sui/client';
 import { parseNFTMintedEvents, queryAllNFTMintedEvents, fetchUserNFTs } from '@/lib/nftUtils';
-import { PACKAGE_ID } from '@/lib/config';
+import { NFT_PACKAGE_ID } from '@/lib/config';
 
 export default function NFTPage() {
   const currentAccount = useCurrentAccount();
@@ -29,7 +29,7 @@ export default function NFTPage() {
   const handleQueryAllNFTMintedEvents = async () => {
     try {
       setLoading(true);
-      const events = await queryAllNFTMintedEvents(suiClient, PACKAGE_ID);
+      const events = await queryAllNFTMintedEvents(suiClient, NFT_PACKAGE_ID);
       setMintedEvents(events);
       return events;
     } catch (error) {
@@ -84,7 +84,7 @@ export default function NFTPage() {
 
     try {
       setLoading(true);
-      const nfts = await fetchUserNFTs(suiClient, currentAccount.address, PACKAGE_ID);
+      const nfts = await fetchUserNFTs(suiClient, currentAccount.address, NFT_PACKAGE_ID);
       setMintedNFTs(nfts);
     } catch (error) {
       console.error('Error fetching NFTs:', error);
@@ -134,7 +134,7 @@ export default function NFTPage() {
             <div className="flex flex-col">
               <span className="font-semibold text-gray-600 dark:text-gray-400">Package ID:</span>
               <span className="font-mono text-xs break-all text-gray-800 dark:text-gray-200">
-                {PACKAGE_ID}
+                {NFT_PACKAGE_ID}
               </span>
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function NFTPage() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Mint NFT Form Component */}
           <MintNFTForm
-            packageId={PACKAGE_ID}
+            packageId={NFT_PACKAGE_ID}
             onMintSuccess={handleMintSuccess}
             onFetchNFTs={handleFetchUserNFTs}
           />

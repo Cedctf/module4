@@ -1,6 +1,6 @@
 import { SuiClient } from '@mysten/sui/client';
 import { ParsedNFTEvent } from './types';
-import { PACKAGE_ID } from './config';
+import { NFT_PACKAGE_ID } from './config';
 
 // Helper function to manually encode string to BCS format (bypass SDK bug)
 export const encodeToBCS = (text: string): Uint8Array => {
@@ -86,7 +86,7 @@ export const parseNFTMintedEvents = async (
 // Function to query all historical NFTMinted events from the contract
 export const queryAllNFTMintedEvents = async (
   suiClient: SuiClient,
-  packageId: string = PACKAGE_ID
+  packageId: string = NFT_PACKAGE_ID
 ): Promise<ParsedNFTEvent[]> => {
   try {
     console.log('=== Querying All NFT Minted Events ===');
@@ -148,7 +148,7 @@ export const queryAllNFTMintedEvents = async (
 export const fetchUserNFTs = async (
   suiClient: SuiClient,
   userAddress: string,
-  packageId: string = PACKAGE_ID
+  packageId: string = NFT_PACKAGE_ID
 ) => {
   try {
     const objects = await suiClient.getOwnedObjects({
