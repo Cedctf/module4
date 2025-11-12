@@ -1,4 +1,4 @@
-module nft::nft {
+module contracts::nft {
     use std::string;
     use sui::url::{Self, Url};
     use sui::event;

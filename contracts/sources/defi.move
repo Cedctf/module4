@@ -1,4 +1,4 @@
-module workshop::defi {
+module contracts::defi {
     use sui::coin::{Self, Coin};
     use sui::balance::{Self, Balance};
     use sui::sui::SUI;
