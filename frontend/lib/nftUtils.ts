@@ -25,44 +25,62 @@ export const encodeToBCS = (text: string): Uint8Array => {
   return new Uint8Array([...lengthBytes, ...stringBytes]);
 };
 
-// Function to parse NFTMinted events from transaction
+// Function to parse NFTMinted events from transaction with retry logic
 export const parseNFTMintedEvents = async (
   suiClient: SuiClient,
-  txDigest: string
+  txDigest: string,
+  maxRetries: number = 5,
+  baseDelay: number = 1000
 ): Promise<ParsedNFTEvent[]> => {
-  try {
-    const txDetails = await suiClient.getTransactionBlock({
-      digest: txDigest,
-      options: {
-        showEvents: true,
-        showEffects: true,
-      },
-    });
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      console.log(`Attempting to fetch transaction ${txDigest} (attempt ${attempt + 1}/${maxRetries})`);
+      
+      const txDetails = await suiClient.getTransactionBlock({
+        digest: txDigest,
+        options: {
+          showEvents: true,
+          showEffects: true,
+        },
+      });
 
-    console.log('Transaction Details:', txDetails);
+      console.log('Transaction Details:', txDetails);
 
-    // Filter for NFTMinted events
-    const events = txDetails.events || [];
-    const nftMintedEvents = events.filter((event: any) => 
-      event.type.includes('::nft::NFTMinted')
-    );
+      // Filter for NFTMinted events
+      const events = txDetails.events || [];
+      const nftMintedEvents = events.filter((event: any) => 
+        event.type.includes('::nft::NFTMinted')
+      );
 
-    console.log('NFTMinted Events:', nftMintedEvents);
+      console.log('NFTMinted Events:', nftMintedEvents);
 
-    // Parse and store the events
-    const parsedEvents = nftMintedEvents.map((event: any) => ({
-      objectId: event.parsedJson?.object_id,
-      creator: event.parsedJson?.creator,
-      name: event.parsedJson?.name,
-      timestamp: new Date(event.timestampMs || Date.now()).toISOString(),
-      txDigest: txDigest,
-    }));
+      // Parse and store the events
+      const parsedEvents = nftMintedEvents.map((event: any) => ({
+        objectId: event.parsedJson?.object_id,
+        creator: event.parsedJson?.creator,
+        name: event.parsedJson?.name,
+        timestamp: new Date(event.timestampMs || Date.now()).toISOString(),
+        txDigest: txDigest,
+      }));
 
-    return parsedEvents;
-  } catch (error) {
-    console.error('Error parsing NFT minted events:', error);
-    return [];
+      return parsedEvents;
+    } catch (error: any) {
+      console.warn(`Attempt ${attempt + 1} failed:`, error.message);
+      
+      // If this is the last attempt, return empty array instead of throwing
+      if (attempt === maxRetries - 1) {
+        console.error('All attempts failed to parse NFT minted events:', error);
+        return [];
+      }
+      
+      // Wait before retrying with exponential backoff
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(`Waiting ${delay}ms before retry...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
+  
+  return [];
 };
 
 // Function to query all historical NFTMinted events from the contract

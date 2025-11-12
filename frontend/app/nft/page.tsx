@@ -50,15 +50,26 @@ export default function NFTPage() {
   const handleMintSuccess = async (digest: string) => {
     setTxDigest(digest);
     
-    // Parse and index the NFTMinted events from this transaction
-    const events = await parseNFTMintedEvents(suiClient, digest);
+    // Show immediate success message
+    alert(`NFT Minted Successfully! Transaction: ${digest}`);
     
-    if (events.length > 0) {
-      // Add the new events to the beginning of the list (newest first)
-      setMintedEvents(prev => [...events, ...prev]);
-      alert(`NFT Minted! Object ID: ${events[0].objectId}`);
-    } else {
-      alert(`NFT Minted! Tx Digest: ${digest}`);
+    // Parse and index the NFTMinted events from this transaction (with retry logic)
+    try {
+      const events = await parseNFTMintedEvents(suiClient, digest);
+      
+      if (events.length > 0) {
+        // Add the new events to the beginning of the list (newest first)
+        setMintedEvents(prev => [...events, ...prev]);
+        console.log(`Successfully parsed NFT event. Object ID: ${events[0].objectId}`);
+      } else {
+        console.log('No events found in transaction, but NFT was minted successfully');
+        // Refresh all events to catch the new one
+        setTimeout(() => handleQueryAllNFTMintedEvents(), 2000);
+      }
+    } catch (error) {
+      console.error('Failed to parse mint events, but NFT was minted:', error);
+      // Refresh all events as fallback
+      setTimeout(() => handleQueryAllNFTMintedEvents(), 3000);
     }
   };
 
