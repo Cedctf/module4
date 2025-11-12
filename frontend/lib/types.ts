@@ -1,4 +1,4 @@
-// NFT-related type definitions
+// Type definitions for NFT and DeFi functionality
 import { SuiObjectResponse } from '@mysten/sui/client';
 
 export interface NFTMintedEvent {
@@ -42,3 +42,26 @@ export interface ParsedNFTEvent {
   txDigest: string;
   eventSeq?: number;
 }
+
+// DeFi-related type definitions
+
+export interface DeFiPoolData {
+  poolBalance: string;
+  userBalance: string;
+  userDebt: string;
+}
+
+export interface DeFiTransactionParams {
+  amount: string;
+  packageId: string;
+  poolId: string;
+}
+
+export interface DeFiFormState {
+  depositAmount: string;
+  borrowAmount: string;
+  repayAmount: string;
+  loading: boolean;
+  txDigest: string;
+}
+
