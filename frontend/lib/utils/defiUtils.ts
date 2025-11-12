@@ -44,9 +44,33 @@ export const fetchPoolData = async (
     });
     const userBalance = mistToSui(coins.totalBalance);
 
-    // Note: Getting user debt requires calling a view function
-    // For simplicity, we'll return 0 for now
-    const userDebt = '0';
+    // Get user's debt by calling the view function
+    let userDebt = '0';
+    try {
+      const tx = new Transaction();
+      tx.moveCall({
+        target: `${DEFI_PACKAGE_ID}::defi::get_debt`,
+        arguments: [
+          tx.object(poolId),
+          tx.pure.address(userAddress)
+        ],
+      });
+
+      const debtResult = await suiClient.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: userAddress
+      });
+
+      if (debtResult.results && debtResult.results[0] && debtResult.results[0].returnValues) {
+        const debtBytes = debtResult.results[0].returnValues[0][0];
+        // Parse the BCS-encoded u64 value
+        const debtInMist = new DataView(new Uint8Array(debtBytes).buffer).getBigUint64(0, true);
+        userDebt = mistToSui(Number(debtInMist));
+      }
+    } catch (error) {
+      console.warn('Failed to fetch user debt:', error);
+      // Keep userDebt as '0' if the call fails
+    }
 
     return {
       poolBalance,
