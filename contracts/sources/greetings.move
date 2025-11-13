@@ -1,4 +1,4 @@
-module hello_world::greeting {
+module contracts::greeting {
     use std::string;
     use sui::object::{Self, UID};
     use sui::transfer;
