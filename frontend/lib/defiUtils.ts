@@ -24,17 +24,28 @@ export const fetchPoolData = async (
   poolId: string = DEFI_POOL_ID
 ): Promise<DeFiPoolData> => {
   try {
-    // Get pool balance
-    const poolObject: SuiObjectResponse = await suiClient.getObject({
-      id: poolId,
-      options: { showContent: true },
-    });
-
+    // Get pool balance using module function
     let poolBalance = '0';
-    if (poolObject.data?.content?.dataType === 'moveObject') {
-      const fields = poolObject.data.content.fields as any;
-      const balance = fields.deposits || '0';
-      poolBalance = mistToSui(balance);
+    try {
+      const tx = new Transaction();
+      tx.moveCall({
+        target: `${DEFI_PACKAGE_ID}::defi::get_pool_balance`,
+        arguments: [tx.object(poolId)],
+      });
+
+      const balanceResult = await suiClient.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: userAddress
+      });
+
+      if (balanceResult.results && balanceResult.results[0] && balanceResult.results[0].returnValues) {
+        const balanceBytes = balanceResult.results[0].returnValues[0][0];
+        const balanceInMist = new DataView(new Uint8Array(balanceBytes).buffer).getBigUint64(0, true);
+        poolBalance = mistToSui(Number(balanceInMist));
+      }
+    } catch (error) {
+      console.warn('Failed to fetch pool balance:', error);
+      // Keep poolBalance as '0' if the call fails
     }
 
     // Get user's SUI balance
