@@ -51,7 +51,7 @@ export default function MintNFTForm({ packageId, onMintSuccess, onFetchNFTs }: M
       tx.moveCall({
         target: `${packageId}::nft::mint_to_sender`,
         arguments: [
-          tx.pure(nameBytes),
+          tx.pure(nameBytes), 
           tx.pure(descBytes),
           tx.pure(urlBytes),
         ],
