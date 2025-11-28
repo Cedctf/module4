@@ -1,4 +1,4 @@
-module contracts::greeting {
+module greetings::greeting {
     use std::string;
     use sui::object::{Self, UID};
     use sui::transfer;
